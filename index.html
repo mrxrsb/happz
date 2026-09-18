@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happz</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3A2B1E">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Happz">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #F2E8D5;
+    --cream-2: #EADFC7;
+    --ink: #3A2B1E;
+    --ink-soft: #6B5842;
+    --mustard: #C08A2E;
+    --mustard-deep: #9C6E1F;
+    --tomato: #B0483F;
+    --line: #D8C8A6;
+    --paper: #FBF6EA;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--cream);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(58,43,30,0.05) 1px, transparent 0);
+    background-size: 18px 18px;
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+  .wrap{
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 20px 0;
+  }
+  header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 28px;
+    gap: 16px;
+  }
+  h1{
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+  h1 .num-accent{
+    color: var(--mustard);
+  }
+  .app-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
+    padding-top: 14px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.3px;
+  }
+  .footer-center{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .footer-credit{
+    white-space: nowrap;
+  }
+  .list-avg-group{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .list-avg{
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+    font-size: 29px;
+    color: var(--mustard-deep);
+    line-height:1;
+  }
+  .list-count{
+    display: flex;
+    flex-direction: column;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+  .list-count-sub{
+    font-size: 10.5px;
+    opacity: 1;
+  }
+
+  form{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 20px 22px;
+    margin-bottom: 40px;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .form-title{
+    font-family:'Work Sans', sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+  .form-title .chevron{
+    color: var(--ink-soft);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  form.open .form-title .chevron{
+    transform: rotate(180deg);
+  }
+  .form-body{
+    display: none;
+    margin-top: 18px;
+  }
+  form.open .form-body{
+    display: block;
+  }
+  .row{
+    display:flex;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .field{
+    flex: 1;
+    min-width: 0;
+  }
+  .field label{
+    display:block;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+  input[type=text], input[type=number], input[type=date], textarea, select#itemType{
+    width: 100%;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 9px 10px;
+  }
+  select#itemType{
+    height: 39px;
+    cursor: pointer;
+  }
+  input:focus, textarea:focus, select#itemType:focus{
+    outline: none;
+    border-color: var(--mustard-deep);
+    box-shadow: 0 0 0 2px rgba(192,138,46,0.18);
+  }
+  textarea{ resize: none; font-family: 'Work Sans', sans-serif; overflow: hidden; line-height: 1.4; }
+
+  .rating-pick{
+    display:flex;
+    gap: 6px;
+    padding-top: 3px;
+  }
+  .bite{
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--mustard-deep);
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+  }
+  .bite.on{
+    background: var(--mustard);
+  }
+  .bite.on::after{
+    content:'';
+    position:absolute;
+    top:-2px; right:-3px;
+    width: 9px; height: 9px;
+    background: var(--paper);
+    border-radius: 50%;
+  }
+
+  .submit-row{
+    display:flex;
+    justify-content:flex-end;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  button.primary{
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  button.primary:hover{ background: var(--mustard-deep); }
+  button.primary:disabled{ opacity: 0.5; cursor: default; }
+  button.secondary{
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    padding: 10px 16px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  button.secondary:hover{ border-color: var(--ink-soft); color: var(--ink); }
+
+  .modal-backdrop{
+    display:none;
+    position: fixed;
+    inset: 0;
+    background: rgba(58,43,30,0.45);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 100;
+  }
+  .modal-backdrop.open{ display: flex; }
+  .modal-card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 22px;
+    max-width: 320px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(58,43,30,0.25);
+  }
+  .modal-text{
+    font-size: 15px;
+    color: var(--ink);
+    margin-bottom: 18px;
+    line-height: 1.4;
+  }
+  .modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap: 10px;
+  }
+  button.danger{
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--tomato);
+    color: var(--paper);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  button.danger:hover{ opacity: 0.9; }
+
+  .list-title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family:'Work Sans', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.4px;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+  }
+  .list-controls{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .sort-select{
+    font-family: 'Work Sans', sans-serif;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 5px 8px;
+    cursor: pointer;
+  }
+  .sort-select:focus{
+    outline: none;
+    border-color: var(--mustard-deep);
+  }
+  .backup-row{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .backup-sep{ color: var(--line); }
+  .link-btn{
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .link-btn:hover{ color: var(--ink); }
+  .link-icon{
+    font-size: 15px;
+    vertical-align: -1px;
+    display: inline-block;
+  }
+
+  .entry{
+    display:flex;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: flex-start;
+  }
+  .entry .date-col{
+    width: 62px;
+    flex-shrink:0;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    padding-top: 3px;
+    line-height: 1.4;
+  }
+  .entry .main{
+    flex:1;
+    min-width: 0;
+  }
+  .entry .top-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap: 10px;
+  }
+  .entry .place{
+    font-family:'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .entry .city-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap: 10px;
+    margin-top: 1px;
+  }
+  .entry .type-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap: 10px;
+    margin-top: 1px;
+  }
+  .entry .item-type{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .entry .city{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .entry .score{
+    font-size: 11.5px;
+    color: var(--mustard-deep);
+    white-space: nowrap;
+  }
+  .entry .price{
+    font-size: 13px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .entry .filling{
+    font-size: 13.5px;
+    color: var(--mustard-deep);
+    margin-top: 2px;
+  }
+  .entry .notes{
+    font-size: 14px;
+    color: var(--ink);
+    margin-top: 7px;
+    line-height: 1.5;
+  }
+  .bites-line{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 9px;
+  }
+  .entry .bites-row{
+    display:flex;
+    gap: 4px;
+  }
+  .entry .bites-row .dot{
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--line);
+    position: relative;
+  }
+  .entry .bites-row .dot.on{
+    background: var(--mustard);
+  }
+  .entry .bites-row .dot.on::after{
+    content:'';
+    position:absolute;
+    top:-1px; right:-1.5px;
+    width: 4px; height: 4px;
+    background: var(--cream);
+    border-radius: 50%;
+  }
+  .entry .bites-label{
+    font-size: 11px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .entry .del{
+    background: none;
+    border: none;
+    color: var(--tomato);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.55;
+  }
+  .entry .del:hover{ opacity: 1; }
+  .entry .edit{
+    background: none;
+    border: none;
+    color: var(--mustard-deep);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+  }
+  .entry .edit:hover{ opacity: 1; }
+  .entry-footer{
+    display:flex;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .empty{
+    text-align:center;
+    padding: 50px 20px;
+    color: var(--ink-soft);
+  }
+  .empty .big{
+    font-family:'Work Sans', sans-serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .loading{
+    text-align:center;
+    padding: 40px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px){
+    h1{ font-size: 34px; }
+    .row{ flex-direction: column; gap: 10px; }
+    .row .field{ max-width: none !important; }
+    .row.row-compact{ flex-direction: row; flex-wrap: wrap; gap: 10px; }
+    .row.row-compact .field{ max-width: 50% !important; flex: 1 1 calc(50% - 5px); }
+    .row.row-compact .field:nth-child(3){ max-width: none !important; flex-basis: 100%; }
+    .entry .date-col{ width: 48px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1><span class="num-accent">H</span>appz</h1>
+    </div>
+  </header>
+
+  <form id="reviewForm" autocomplete="off">
+    <div class="form-title" id="formTitle">
+      <span id="formTitleText">Nieuw happz</span>
+      <svg class="chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M3 5.5L7 9.5L11 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="form-body" id="formBody">
+    <div class="row">
+      <div class="field">
+        <label for="place">Waar heb je gegeten?</label>
+        <input type="text" id="place" placeholder="bijv. Bakkerij Van Dijk" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="city">Plaats</label>
+        <input type="text" id="city" placeholder="bijv. Enschede">
+      </div>
+    </div>
+    <div class="row row-compact">
+      <div class="field" style="max-width: 148px;">
+        <label for="date">Datum</label>
+        <input type="date" id="date">
+      </div>
+      <div class="field" style="max-width: 148px;">
+        <label for="price">Prijs (€)</label>
+        <input type="number" id="price" step="0.01" min="0" placeholder="3,50">
+      </div>
+      <div class="field">
+        <label for="itemType">Soort</label>
+        <select id="itemType">
+          <option value="12uurtje">12uurtje</option>
+          <option value="carpaccio">carpaccio</option>
+          <option value="salade">salade</option>
+          <option value="uitsmijter">uitsmijter</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="filling">Wat zat erin?</label>
+        <input type="text" id="filling" placeholder="bijv. kaas, ham, ei">
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Cijfer</label>
+        <div class="rating-pick" id="ratingPick">
+          <button type="button" class="bite" data-val="1"></button>
+          <button type="button" class="bite" data-val="2"></button>
+          <button type="button" class="bite" data-val="3"></button>
+          <button type="button" class="bite" data-val="4"></button>
+          <button type="button" class="bite" data-val="5"></button>
+          <button type="button" class="bite" data-val="6"></button>
+          <button type="button" class="bite" data-val="7"></button>
+          <button type="button" class="bite" data-val="8"></button>
+          <button type="button" class="bite" data-val="9"></button>
+          <button type="button" class="bite" data-val="10"></button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="notes">Notities</label>
+        <textarea id="notes" rows="5" placeholder="Hoe was het eten, de service, zou je het weer halen?"></textarea>
+      </div>
+    </div>
+    <div class="submit-row">
+      <button type="button" class="secondary" id="cancelEdit">Annuleren</button>
+      <button type="submit" class="primary" id="submitBtn">Opslaan</button>
+    </div>
+    </div>
+  </form>
+
+  <div class="list-title">
+    <span class="list-avg-group">
+      <span class="list-avg" id="avgNumSmall">–</span>
+      <span class="list-count">
+        <span id="countLblSmall">0 happzjes</span>
+        <span class="list-count-sub">gehad</span>
+      </span>
+    </span>
+    <div class="list-controls">
+      <select class="sort-select" id="sortSelect">
+        <option value="date">nieuwste eerst</option>
+        <option value="rating-desc">hoogste cijfer eerst</option>
+        <option value="rating-asc">laagste cijfer eerst</option>
+        <option value="score-desc">hoogste score eerst</option>
+        <option value="score-asc">laagste score eerst</option>
+      </select>
+      <select class="sort-select" id="filterSelect">
+        <option value="all">alles</option>
+        <option value="12uurtje">12uurtje</option>
+        <option value="carpaccio">carpaccio</option>
+        <option value="salade">salade</option>
+        <option value="uitsmijter">uitsmijter</option>
+      </select>
+    </div>
+  </div>
+  <div id="list">
+    <div class="loading">Bezig met laden…</div>
+  </div>
+  <footer class="app-footer">
+    <span class="footer-center">
+      <span class="footer-version">v1.0</span>
+      <span>|</span>
+      <span class="footer-credit">mrxrsb powered by Claude AI</span>
+    </span>
+    <span class="backup-row">
+      <button type="button" class="link-btn" id="exportBtn"><span class="link-icon">⬇</span> Export</button>
+      <span class="backup-sep">|</span>
+      <button type="button" class="link-btn" id="importBtn"><span class="link-icon">⬆</span> Import</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </span>
+  </footer>
+</div>
+
+<div class="modal-backdrop" id="confirmBackdrop">
+  <div class="modal-card">
+    <div class="modal-text" id="confirmText">Weet je zeker dat je deze happz wilt verwijderen?</div>
+    <div class="modal-actions">
+      <button type="button" class="secondary" id="confirmNo">Nee</button>
+      <button type="button" class="danger" id="confirmYes">Ja</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let reviews = [];
+let currentRating = 0;
+let loaded = false;
+let editingId = null;
+let sortMode = 'date';
+let filterType = 'all';
+
+const listEl = document.getElementById('list');
+const form = document.getElementById('reviewForm');
+const ratingPick = document.getElementById('ratingPick');
+const dateInput = document.getElementById('date');
+
+dateInput.valueAsDate = new Date();
+
+document.getElementById('formTitle').addEventListener('click', () => {
+  form.classList.toggle('open');
+});
+
+function openForm(){
+  form.classList.add('open');
+}
+
+ratingPick.addEventListener('click', (e) => {
+  const btn = e.target.closest('.bite');
+  if(!btn) return;
+  currentRating = parseInt(btn.dataset.val, 10);
+  renderRatingPick();
+});
+
+function renderRatingPick(){
+  [...ratingPick.querySelectorAll('.bite')].forEach(b => {
+    b.classList.toggle('on', parseInt(b.dataset.val,10) <= currentRating);
+  });
+}
+
+function fmtDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  const months = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + "\n" + "'" + String(d.getFullYear()).slice(2);
+}
+
+function fmtPrice(p){
+  if(p === null || p === undefined || p === '') return '';
+  return '€ ' + Number(p).toFixed(2).replace('.', ',');
+}
+
+function fmtScore(rating, price){
+  const p = Number(price);
+  if(!rating || !p || p <= 0) return '';
+  return ((rating / p) * 10).toFixed(2).replace('.', ',');
+}
+
+async function loadReviews(){
+  try{
+    const raw = localStorage.getItem('12uurtje_reviews');
+    reviews = raw ? JSON.parse(raw) : [];
+  }catch(err){
+    reviews = [];
+  }
+  loaded = true;
+  render();
+}
+
+async function saveReviews(){
+  try{
+    localStorage.setItem('12uurtje_reviews', JSON.stringify(reviews));
+  }catch(err){
+    console.error('Opslaan mislukt', err);
+  }
+}
+
+function render(){
+  // stats
+  const count = reviews.length;
+  document.getElementById('countLblSmall').textContent = count === 1 ? '1 happzje' : count + ' happzjes';
+  if(count > 0){
+    const avg = reviews.reduce((s,r) => s + (r.rating||0), 0) / count;
+    document.getElementById('avgNumSmall').textContent = avg.toFixed(1);
+  } else {
+    document.getElementById('avgNumSmall').textContent = '–';
+  }
+
+  if(!loaded){
+    listEl.innerHTML = '<div class="loading">Bezig met laden…</div>';
+    return;
+  }
+
+  if(reviews.length === 0){
+    listEl.innerHTML = `
+      <div class="empty">
+        <div class="big">Nog geen happzjes gehad</div>
+      </div>`;
+    return;
+  }
+
+  function scoreValue(r){
+    const p = Number(r.price);
+    if(!r.rating || !p || p <= 0) return null;
+    return r.rating / p;
+  }
+
+  const filtered = filterType === 'all' ? reviews : reviews.filter(r => r.itemType === filterType);
+
+  const sorted = [...filtered].sort((a,b) => {
+    if(sortMode === 'rating-desc') return (b.rating||0) - (a.rating||0) || (b.date || '').localeCompare(a.date || '');
+    if(sortMode === 'rating-asc') return (a.rating||0) - (b.rating||0) || (b.date || '').localeCompare(a.date || '');
+    if(sortMode === 'score-desc' || sortMode === 'score-asc'){
+      const sa = scoreValue(a), sb = scoreValue(b);
+      if(sa === null && sb === null) return (b.date || '').localeCompare(a.date || '');
+      if(sa === null) return 1;
+      if(sb === null) return -1;
+      return sortMode === 'score-desc' ? (sb - sa) : (sa - sb);
+    }
+    return (b.date || '').localeCompare(a.date || '') || b.createdAt - a.createdAt;
+  });
+
+  function entryTemplate(r){
+    return `
+    <div class="entry" data-id="${r.id}">
+      <div class="date-col">${fmtDate(r.date).split("\n").join('<br>')}</div>
+      <div class="main">
+        <div class="top-line">
+          <div class="place">${escapeHtml(r.place)}</div>
+        </div>
+        ${r.city || fmtPrice(r.price) ? `<div class="city-line">
+          <div class="city">${r.city ? escapeHtml(r.city) : ''}</div>
+          <div class="price">${fmtPrice(r.price)}</div>
+        </div>` : ''}
+        ${r.itemType || fmtScore(r.rating, r.price) ? `<div class="type-line">
+          <div class="item-type">${r.itemType ? escapeHtml(r.itemType) : ''}</div>
+          <div class="score">${fmtScore(r.rating, r.price)}</div>
+        </div>` : ''}
+        ${r.filling ? `<div class="filling">${escapeHtml(r.filling)}</div>` : ''}
+        <div class="bites-line">
+          <div class="bites-row">
+            ${[1,2,3,4,5,6,7,8,9,10].map(i => `<div class="dot ${i <= r.rating ? 'on' : ''}"></div>`).join('')}
+          </div>
+          <div class="bites-label">${r.rating || 0} ${r.rating === 1 ? 'happzje' : 'happzjes'}</div>
+        </div>
+        ${r.notes ? `<div class="notes">${escapeHtml(r.notes)}</div>` : ''}
+        <div class="entry-footer">
+          <button class="edit" data-id="${r.id}">bewerken</button>
+          <button class="del" data-id="${r.id}">verwijderen</button>
+        </div>
+      </div>
+    </div>
+  `;
+  }
+
+  if(sorted.length === 0){
+    listEl.innerHTML = `
+      <div class="empty">
+        <div class="big">Geen happzjes van dit type.</div>
+        <div>Kies een andere soort, of "alles" om alles te zien.</div>
+      </div>`;
+    return;
+  }
+
+  listEl.innerHTML = sorted.map(entryTemplate).join('');
+
+  [...listEl.querySelectorAll('.del')].forEach(btn => {
+    btn.addEventListener('click', () => askDelete(btn.dataset.id));
+  });
+  [...listEl.querySelectorAll('.edit')].forEach(btn => {
+    btn.addEventListener('click', () => startEdit(btn.dataset.id));
+  });
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+let confirmCallback = null;
+
+function openConfirm(message, onYes){
+  document.getElementById('confirmText').textContent = message;
+  confirmCallback = onYes;
+  document.getElementById('confirmBackdrop').classList.add('open');
+}
+
+function closeConfirm(){
+  confirmCallback = null;
+  document.getElementById('confirmBackdrop').classList.remove('open');
+}
+
+function askDelete(id){
+  openConfirm('Weet je zeker dat je deze happz wilt verwijderen?', () => deleteReview(id));
+}
+
+async function deleteReview(id){
+  reviews = reviews.filter(r => r.id !== id);
+  if(editingId === id) cancelEdit();
+  render();
+  await saveReviews();
+}
+
+document.getElementById('confirmNo').addEventListener('click', closeConfirm);
+document.getElementById('confirmYes').addEventListener('click', async () => {
+  const cb = confirmCallback;
+  closeConfirm();
+  if(cb) await cb();
+});
+document.getElementById('confirmBackdrop').addEventListener('click', (e) => {
+  if(e.target.id === 'confirmBackdrop') closeConfirm();
+});
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const dataStr = JSON.stringify(reviews, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Happz-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importFile').click();
+});
+
+document.getElementById('importFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let parsed;
+    try{
+      parsed = JSON.parse(reader.result);
+      if(!Array.isArray(parsed)) throw new Error('geen lijst');
+    }catch(err){
+      alert('Kon het bestand niet lezen. Kies een geldig Happz-exportbestand (.json).');
+      return;
+    }
+    openConfirm(
+      `Dit vervangt je huidige ${reviews.length} happz(s) door ${parsed.length} uit het bestand. Doorgaan?`,
+      async () => {
+        reviews = parsed;
+        render();
+        await saveReviews();
+      }
+    );
+  };
+  reader.readAsText(file);
+});
+
+function startEdit(id){
+  const r = reviews.find(x => x.id === id);
+  if(!r) return;
+  editingId = id;
+
+  document.getElementById('place').value = r.place || '';
+  document.getElementById('city').value = r.city || '';
+  document.getElementById('filling').value = r.filling || '';
+  document.getElementById('price').value = (r.price === null || r.price === undefined) ? '' : r.price;
+  document.getElementById('date').value = r.date || '';
+  document.getElementById('itemType').value = r.itemType || '12uurtje';
+  document.getElementById('notes').value = r.notes || '';
+  autoGrowNotes();
+  currentRating = r.rating || 0;
+  renderRatingPick();
+
+  document.getElementById('formTitleText').textContent = 'Happz bewerken';
+  document.getElementById('submitBtn').textContent = 'Wijzigingen opslaan';
+
+  openForm();
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('place').focus();
+}
+
+let notesMinHeight = null;
+
+function getNotesMinHeight(el){
+  const cs = getComputedStyle(el);
+  const lineHeight = parseFloat(cs.lineHeight) || (parseFloat(cs.fontSize) * 1.4);
+  const paddingV = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+  const borderV = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+  const rows = parseInt(el.getAttribute('rows'), 10) || 5;
+  return Math.ceil(lineHeight * rows + paddingV + borderV);
+}
+
+function autoGrowNotes(){
+  const el = document.getElementById('notes');
+  if(notesMinHeight === null){
+    notesMinHeight = getNotesMinHeight(el);
+  }
+  el.style.height = 'auto';
+  el.style.height = Math.max(el.scrollHeight, notesMinHeight) + 'px';
+}
+
+function cancelEdit(){
+  editingId = null;
+  form.reset();
+  dateInput.valueAsDate = new Date();
+  currentRating = 0;
+  renderRatingPick();
+  document.getElementById('formTitleText').textContent = 'Nieuw happz';
+  document.getElementById('submitBtn').textContent = 'Opslaan';
+  form.classList.remove('open');
+  autoGrowNotes();
+}
+
+document.getElementById('cancelEdit').addEventListener('click', cancelEdit);
+document.getElementById('notes').addEventListener('input', autoGrowNotes);
+
+document.getElementById('sortSelect').addEventListener('change', (e) => {
+  sortMode = e.target.value;
+  render();
+});
+
+document.getElementById('filterSelect').addEventListener('change', (e) => {
+  filterType = e.target.value;
+  render();
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const place = document.getElementById('place').value.trim();
+  if(!place) return;
+
+  const fields = {
+    place,
+    city: document.getElementById('city').value.trim(),
+    filling: document.getElementById('filling').value.trim(),
+    price: document.getElementById('price').value ? parseFloat(document.getElementById('price').value) : null,
+    date: document.getElementById('date').value,
+    itemType: document.getElementById('itemType').value,
+    rating: currentRating,
+    notes: document.getElementById('notes').value.trim()
+  };
+
+  if(editingId){
+    const idx = reviews.findIndex(r => r.id === editingId);
+    if(idx !== -1){
+      reviews[idx] = { ...reviews[idx], ...fields };
+    }
+  } else {
+    reviews.push({
+      id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      createdAt: Date.now(),
+      ...fields
+    });
+  }
+
+  render();
+  await saveReviews();
+  cancelEdit();
+});
+
+loadReviews();
+autoGrowNotes();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registratie mislukt', err));
+  });
+}
+</script>
+</body>
+</html>
