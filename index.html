@@ -193,10 +193,34 @@
   .bite.on{
     background: var(--mustard);
   }
-  .bite.on::after{
+  .rating-pick-row{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .rating-value{
+    font-family:'Work Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--mustard-deep);
+    min-width: 28px;
+  }
+  .rating-value-label{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .rating-hint{
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 5px;
+  }
+  .bite.half{
+    background: linear-gradient(90deg, var(--mustard) 50%, transparent 50%);
+  }
+  .bite.on::after, .bite.half::after{
     content:'';
     position:absolute;
-    top:-2px; right:-3px;
+    top:-2px; left:-3px;
     width: 9px; height: 9px;
     background: var(--paper);
     border-radius: 50%;
@@ -429,6 +453,9 @@
   .entry .bites-row .dot.on{
     background: var(--mustard);
   }
+  .entry .bites-row .dot.half{
+    background: linear-gradient(90deg, var(--mustard) 50%, var(--line) 50%);
+  }
   .entry .bites-row .dot.on::after{
     content:'';
     position:absolute;
@@ -541,9 +568,11 @@
         <label for="itemType">Soort</label>
         <select id="itemType">
           <option value="12uurtje">12uurtje</option>
+          <option value="bittergarnituur">bittergarnituur</option>
           <option value="carpaccio">carpaccio</option>
           <option value="salade">salade</option>
           <option value="uitsmijter">uitsmijter</option>
+          <option value="overig">overig</option>
         </select>
       </div>
     </div>
@@ -556,18 +585,23 @@
     <div class="row">
       <div class="field">
         <label>Cijfer</label>
-        <div class="rating-pick" id="ratingPick">
-          <button type="button" class="bite" data-val="1"></button>
-          <button type="button" class="bite" data-val="2"></button>
-          <button type="button" class="bite" data-val="3"></button>
-          <button type="button" class="bite" data-val="4"></button>
-          <button type="button" class="bite" data-val="5"></button>
-          <button type="button" class="bite" data-val="6"></button>
-          <button type="button" class="bite" data-val="7"></button>
-          <button type="button" class="bite" data-val="8"></button>
-          <button type="button" class="bite" data-val="9"></button>
-          <button type="button" class="bite" data-val="10"></button>
+        <div class="rating-pick-row">
+          <div class="rating-pick" id="ratingPick">
+            <button type="button" class="bite" data-val="1"></button>
+            <button type="button" class="bite" data-val="2"></button>
+            <button type="button" class="bite" data-val="3"></button>
+            <button type="button" class="bite" data-val="4"></button>
+            <button type="button" class="bite" data-val="5"></button>
+            <button type="button" class="bite" data-val="6"></button>
+            <button type="button" class="bite" data-val="7"></button>
+            <button type="button" class="bite" data-val="8"></button>
+            <button type="button" class="bite" data-val="9"></button>
+            <button type="button" class="bite" data-val="10"></button>
+          </div>
+          <span class="rating-value" id="ratingValue">–</span>
+          <span class="rating-value-label">happzjes</span>
         </div>
+        <div class="rating-hint">Tik links op een rondje voor een half punt, rechts voor een heel punt.</div>
       </div>
     </div>
     <div class="row">
@@ -602,9 +636,11 @@
       <select class="sort-select" id="filterSelect">
         <option value="all">alles</option>
         <option value="12uurtje">12uurtje</option>
+        <option value="bittergarnituur">bittergarnituur</option>
         <option value="carpaccio">carpaccio</option>
         <option value="salade">salade</option>
         <option value="uitsmijter">uitsmijter</option>
+        <option value="overig">overig</option>
       </select>
     </div>
   </div>
@@ -662,14 +698,29 @@ function openForm(){
 ratingPick.addEventListener('click', (e) => {
   const btn = e.target.closest('.bite');
   if(!btn) return;
-  currentRating = parseInt(btn.dataset.val, 10);
+  const val = parseInt(btn.dataset.val, 10);
+  const rect = btn.getBoundingClientRect();
+  const clickedLeftHalf = (e.clientX - rect.left) < rect.width / 2;
+  currentRating = clickedLeftHalf ? val - 0.5 : val;
   renderRatingPick();
 });
 
+function fmtRatingNum(v){
+  if(v === null || v === undefined || v === 0) return '';
+  return Number.isInteger(v) ? String(v) : v.toFixed(1).replace('.', ',');
+}
+
 function renderRatingPick(){
   [...ratingPick.querySelectorAll('.bite')].forEach(b => {
-    b.classList.toggle('on', parseInt(b.dataset.val,10) <= currentRating);
+    const val = parseInt(b.dataset.val, 10);
+    b.classList.remove('on', 'half');
+    if(val <= currentRating){
+      b.classList.add('on');
+    } else if(val - 0.5 === currentRating){
+      b.classList.add('half');
+    }
   });
+  document.getElementById('ratingValue').textContent = currentRating > 0 ? fmtRatingNum(currentRating) : '–';
 }
 
 function fmtDate(iso){
@@ -715,7 +766,7 @@ function render(){
   document.getElementById('countLblSmall').textContent = count === 1 ? '1 happzje' : count + ' happzjes';
   if(count > 0){
     const avg = reviews.reduce((s,r) => s + (r.rating||0), 0) / count;
-    document.getElementById('avgNumSmall').textContent = avg.toFixed(1);
+    document.getElementById('avgNumSmall').textContent = avg.toFixed(1).replace('.', ',');
   } else {
     document.getElementById('avgNumSmall').textContent = '–';
   }
@@ -773,9 +824,9 @@ function render(){
         ${r.filling ? `<div class="filling">${escapeHtml(r.filling)}</div>` : ''}
         <div class="bites-line">
           <div class="bites-row">
-            ${[1,2,3,4,5,6,7,8,9,10].map(i => `<div class="dot ${i <= r.rating ? 'on' : ''}"></div>`).join('')}
+            ${[1,2,3,4,5,6,7,8,9,10].map(i => `<div class="dot ${i <= r.rating ? 'on' : (i - 0.5 === r.rating ? 'half' : '')}"></div>`).join('')}
           </div>
-          <div class="bites-label">${r.rating || 0} ${r.rating === 1 ? 'happzje' : 'happzjes'}</div>
+          <div class="bites-label">${fmtRatingNum(r.rating) || 0} ${r.rating === 1 ? 'happzje' : 'happzjes'}</div>
         </div>
         ${r.notes ? `<div class="notes">${escapeHtml(r.notes)}</div>` : ''}
         <div class="entry-footer">
