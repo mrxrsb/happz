@@ -1,7 +1,7 @@
 {
-  "name": "Haply",
-  "short_name": "Haply",
-  "description": "Houd je haplys bij: plaats, prijs, cijfer en notities.",
+  "name": "Happz",
+  "short_name": "Happz",
+  "description": "Houd je happzjes bij: plaats, prijs, cijfer en notities.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
